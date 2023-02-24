@@ -27,11 +27,11 @@ server.use(express.json());
 server.use(cors());
 server.use(session({
   name: 'chocolatechip',
-  secret: 'oath and combinations',
+  secret: 'oaths and combinations',
   cookie: {
     maxAge: 1000* 60 * 60,
     secure: false,
-    httpOnly: false,
+    httpOnly: true,
   },
   rolling: true,
   resave: false,

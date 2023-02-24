@@ -1,10 +1,12 @@
 const router = require('express').Router();
+const User = require('../users/users-model');
+const bcrypt = require('bcryptjs');
+
 const { 
   checkUsernameFree,
   checkUsernameExists,
   checkPasswordLength, 
 } = require('./auth-middleware');
-
 
 /**
   1 [POST] /api/auth/register { "username": "sue", "password": "1234" }
@@ -64,7 +66,11 @@ const {
  */
 router.post('/register', checkUsernameFree, checkPasswordLength, async (req, res, next) => {
   try {
-    res.status(200).json({ message: 'working on post api/auth/register' })
+    const { username, password } = req.body
+    const hash = bcrypt.hashSync(password, 8)
+    const newUser = { username, password: hash }
+    const result = await User.add(newUser);
+    res.status(201).json(result);
   } catch(err) {
     next(err)
   }
