@@ -62,8 +62,12 @@ const {
     "message": "no session"
   }
  */
-router.post('/register', checkUsernameFree, checkPasswordLength, (req, res, next) => {
-  res.status(200).json({ message: 'working on post api/auth/register' })
+router.post('/register', checkUsernameFree, checkPasswordLength, async (req, res, next) => {
+  try {
+    res.status(200).json({ message: 'working on post api/auth/register' })
+  } catch(err) {
+    next(err)
+  }
 })
 
 router.post('/login', checkUsernameExists, (req, res, next) => { // eslint-disable-line

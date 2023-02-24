@@ -1,4 +1,4 @@
-const db = require('../../data/db-config')
+const User = require('../users/users-model')
 
 /*
   If the user does not have a session saved in the server
@@ -9,11 +9,13 @@ const db = require('../../data/db-config')
   }
 */
 async function restricted(req, res, next) {
-  if (req.session.user) {
-    next()
-  } else{
-    next({ status: 401, message: 'you shall not pass!' })
-  }
+  // if (req.session.user) {
+  //   next()
+  // } else{
+  //   next({ status: 401, message: 'you shall not pass!' })
+  // }
+  console.log(`we've passed through the restricted middleware`)
+  next()
 }
 
 /*
@@ -24,8 +26,19 @@ async function restricted(req, res, next) {
     "message": "Username taken"
   }
 */
-function checkUsernameFree(req, res, next) {
-  next()
+async function checkUsernameFree(req, res, next) {
+  console.log(`we've passed through the checkUsernameFree middleware`)
+  try{
+    const users = await User.findBy({ username: req.body.username })
+    if (!users.length) {
+      next()
+    }
+    else {
+      next({ message: 'Username taken' })
+    }
+  } catch(err) {
+    next(err)
+  }
 }
 
 /*
@@ -37,6 +50,7 @@ function checkUsernameFree(req, res, next) {
   }
 */
 function checkUsernameExists(req, res, next) {
+  console.log(`we've passed through the checkUsernameExists middleware`)
   next()
 }
 
@@ -49,6 +63,7 @@ function checkUsernameExists(req, res, next) {
   }
 */
 function checkPasswordLength(req, res, next) {
+  console.log(`we've passed through the checkPasswordLength middleware`)
   next()
 }
 
