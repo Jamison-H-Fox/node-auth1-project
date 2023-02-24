@@ -96,8 +96,19 @@ router.post('/login', checkUsernameExists, async (req, res, next) => {
   }
 })
 
-router.get('/logout', (req, res, next) => { // eslint-disable-line
-  res.status(200).json({ message: 'working on get api/auth/logout' })
+router.get('/logout', (req, res, next) => {
+  if (req.session.user) {
+    req.session.destroy(err => {
+      if (err) {
+        next(err)
+      } else {
+        res.set('Set-Cookie', 'monkey =; SameSite=Strict; Path=/; Expires=Thu, 01 Jan 1970 00:00:00')
+        res.json({ message: 'logged out' })
+      }
+    })
+  } else {
+    res.json({ message: 'no session' })
+  }
 })
  
 module.exports = router;

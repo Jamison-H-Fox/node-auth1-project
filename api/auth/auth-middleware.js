@@ -1,8 +1,11 @@
 const User = require('../users/users-model')
 
 async function restricted(req, res, next) {
-  console.log(`we've passed through the restricted middleware`)
-  next()
+  if (req.session.user) {
+    next()
+  } else {
+    next({ status: 401, message: 'You shall not pass!' })
+  }
 }
 
 async function checkUsernameFree(req, res, next) {
